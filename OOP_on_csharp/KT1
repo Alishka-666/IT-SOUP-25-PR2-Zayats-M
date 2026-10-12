@@ -1,0 +1,103 @@
+using System;
+
+class Car
+{
+    private string brand;
+    private string model;
+    private int year;
+    private int speed;
+
+    public Car(string brand, string model, int year, int speed)
+    {
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+        this.Speed = speed;
+    }
+
+    public string Brand
+    {
+        get { return brand; }
+        set { brand = value; }
+    }
+
+    public string Model
+    {
+        get { return model; }
+        set { model = value; }
+    }
+
+    public int Year
+    {
+        get { return year; }
+        set { year = value; }
+    }
+
+    public int Speed
+    {
+        get { return speed; }
+        set
+        {
+            if (value < 0)
+            {
+                Console.WriteLine;
+                speed = 0;
+            }
+            else
+            {
+                speed = value;
+            }
+        }
+    }
+
+    public void Accelerate(int value)
+    {
+        if (value < 0)
+        {
+            Console.WriteLine("Ошибка: Значение ускорения не может быть отрицательным");
+        }
+        else
+        {
+            this.Speed += value;
+            Console.WriteLine($"{Brand} {Model} ускорилась на {value} км/ч. Текущая скорость: {Speed} км/ч");
+        }
+    }
+
+    public void PrintInfo()
+    {
+        Console.WriteLine($"Марка: {Brand}");
+        Console.WriteLine($"Модель: {Model}");
+        Console.WriteLine($"Год: {Year}");
+        Console.WriteLine($"Скорость: {Speed} км/ч");
+        Console.WriteLine();
+    }
+
+    static void Main()
+    {
+        Console.WriteLine("Создание первого автомобиля...");
+        Car car1 = new Car("BMW", "M5", 2022, 120);
+        car1.PrintInfo();
+
+        Console.WriteLine("Создание второго автомобиля...");
+        Car car2 = new Car("Mercedes", "C-Class", 2021, 80);
+        car2.PrintInfo();
+
+        Console.WriteLine("Изменение скорости первого автомобиля через свойство...");
+        car1.Speed = 150;
+        car1.PrintInfo();
+
+        Console.WriteLine("Попытка установить отрицательную скорость...");
+        car1.Speed = -50;
+        car1.PrintInfo();
+
+        Console.WriteLine("Использование метода Accelerate...");
+        car1.Accelerate(30);
+        car2.Accelerate(40);
+        car1.PrintInfo();
+        car2.PrintInfo();
+
+        Console.WriteLine("Попытка ускорения на отрицательное значение...");
+        car1.Accelerate(-20);
+        car1.PrintInfo();
+    }
+}

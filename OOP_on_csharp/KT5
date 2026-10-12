@@ -1,0 +1,109 @@
+using System;
+using System.Collections.Generic;
+
+class Movie
+{
+    public string Title;
+    public int Duration;
+    public Movie(string title, int duration) { Title = title; Duration = duration; }
+}
+
+class Seat
+{
+    public int Number;
+    public bool IsTaken;
+    public Seat(int number) { Number = number; }
+
+    public void Reserve()
+    {
+        if (IsTaken) throw new Exception($"Место {Number} уже занято!");
+        IsTaken = true;
+    }
+}
+
+class CinemaHall
+{
+    public List<Seat> Seats = new List<Seat>();
+
+    public CinemaHall(int count)
+    {
+        for (int i = 1; i <= count; i++) Seats.Add(new Seat(i));
+    }
+
+    public void Show()
+    {
+        foreach (Seat s in Seats)
+            Console.Write(s.IsTaken ? "[X] " : $"[{s.Number}] ");
+        Console.WriteLine();
+    }
+}
+
+class Customer
+{
+    public string Name;
+    public List<Seat> Bookings = new List<Seat>();
+    public Customer(string name) { Name = name; }
+}
+
+class BookingService
+{
+    public List<Movie> Movies;
+    public CinemaHall Hall;
+
+    public BookingService(List<Movie> movies, CinemaHall hall) { Movies = movies; Hall = hall; }
+
+    public void ShowMovies()
+    {
+        for (int i = 0; i < Movies.Count; i++)
+            Console.WriteLine($"{i + 1}. {Movies[i].Title} ({Movies[i].Duration} мин.)");
+    }
+
+    public void Book(Customer c, int number)
+    {
+        try
+        {
+            Seat seat = Hall.Seats[number - 1];
+            seat.Reserve();
+            c.Bookings.Add(seat);
+            Console.WriteLine($"Место {number} забронировано.");
+        }
+        catch (ArgumentOutOfRangeException) { Console.WriteLine("Нет такого места."); }
+        catch (Exception e) { Console.WriteLine(e.Message); }
+    }
+
+    public void Cancel(Customer c, int number)
+    {
+        Seat seat = c.Bookings.Find(s => s.Number == number);
+        if (seat == null) { Console.WriteLine("У вас нет такой брони."); return; }
+        seat.IsTaken = false;
+        c.Bookings.Remove(seat);
+        Console.WriteLine("Бронь отменена.");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var service = new BookingService(
+            new List<Movie> { new Movie("Интерстеллар", 169), new Movie("Начало", 148) },
+            new CinemaHall(10));
+        var customer = new Customer("Иван");
+
+        service.ShowMovies();
+        Console.Write("Выберите фильм: ");
+        int movie = int.Parse(Console.ReadLine());
+        Console.WriteLine("Вы выбрали: " + service.Movies[movie - 1].Title);
+
+        service.Hall.Show();
+        Console.Write("Выберите место: ");
+        int seat = int.Parse(Console.ReadLine());
+
+        service.Book(customer, seat);
+        service.Book(customer, seat); // повторно - должна быть ошибка
+        service.Hall.Show();
+
+        service.Cancel(customer, seat);
+        service.Hall.Show();
+    }
+}
