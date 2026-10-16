@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/xhtml">
+    <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
+
+    <xsl:template match="/">
+        <items>
+            <xsl:apply-templates select="//li" mode="item">
+                <xsl:sort select="count(preceding::li)" data-type="number"/>
+            </xsl:apply-templates>
+        </items>
+    </xsl:template>
+
+    <xsl:template match="li" mode="item">
+        <xsl:variable name="myId" select="count(preceding::li) + 1"/>
+        <xsl:variable name="parentLi" select="ancestor::li[1]"/>
+        <xsl:variable name="parentId">
+            <xsl:choose>
+                <xsl:when test="$parentLi">
+                    <xsl:value-of select="count($parentLi/preceding::li) + 1"/>
+                </xsl:when>
+                <xsl:otherwise>0</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <item>
+            <xsl:attribute name="id"><xsl:value-of select="$myId"/></xsl:attribute>
+            <xsl:attribute name="parentid"><xsl:value-of select="$parentId"/></xsl:attribute>
+            <xsl:attribute name="author"><xsl:value-of select="span[@class='author']"/></xsl:attribute>
+        </item>
+    </xsl:template>
+
+</xsl:stylesheet>
