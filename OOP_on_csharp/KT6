@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+
+public interface INotifier
+{
+    void Send(string message);
+}
+
+public class EmailNotifier : INotifier
+{
+    public void Send(string message)
+    {
+        Console.WriteLine($"[Email] Отправка сообщения: \"{message}\"");
+    }
+}
+
+public class SmsNotifier : INotifier
+{
+    public void Send(string message)
+    {
+        Console.WriteLine($"[SMS] Отправка сообщения: \"{message}\"");
+    }
+}
+
+public class TelegramNotifier : INotifier
+{
+    public void Send(string message)
+    {
+        Console.WriteLine($"[Telegram] Отправка сообщения: \"{message}\"");
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        List<INotifier> notifiers = new List<INotifier>
+        {
+            new EmailNotifier(),
+            new SmsNotifier(),
+            new TelegramNotifier()
+        };
+
+        string testMessage = "Интерфейсы — это круто!";
+
+        Console.WriteLine("Начинаем рассылку...\n");
+        foreach (var notifier in notifiers)
+        {
+            notifier.Send(testMessage);
+        }
+    }
+}
