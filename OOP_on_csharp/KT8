@@ -1,0 +1,483 @@
+using System;
+using System.Text;
+
+// ===== Уровень 1 =====
+
+// 1. Точка на плоскости
+struct Point
+{
+    public double X;
+    public double Y;
+
+    public Point(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    // расстояние между двумя точками (теорема Пифагора)
+    public double DistanceTo(Point other)
+    {
+        double dx = other.X - X;
+        double dy = other.Y - Y;
+        return Math.Sqrt(dx * dx + dy * dy);
+    }
+}
+
+// 2. Прямоугольник
+struct Rectangle
+{
+    public double Width;
+    public double Height;
+
+    public Rectangle(double width, double height)
+    {
+        Width = width;
+        Height = height;
+    }
+
+    public double Area()
+    {
+        return Width * Height;
+    }
+
+    public double Perimeter()
+    {
+        return 2 * (Width + Height);
+    }
+}
+
+// 3. Книга
+struct Book
+{
+    public string Title;
+    public string Author;
+    public int Year;
+
+    public Book(string title, string author, int year)
+    {
+        Title = title;
+        Author = author;
+        Year = year;
+    }
+
+    public void Print()
+    {
+        Console.WriteLine(Title + " — " + Author + " (" + Year + ")");
+    }
+}
+
+// ===== Уровень 2 =====
+
+// 4. Комплексное число
+struct ComplexNumber
+{
+    public double Real;
+    public double Imag;
+
+    public ComplexNumber(double real, double imag)
+    {
+        Real = real;
+        Imag = imag;
+    }
+
+    // (a + bi) + (c + di) = (a + c) + (b + d)i
+    public ComplexNumber Add(ComplexNumber other)
+    {
+        return new ComplexNumber(Real + other.Real, Imag + other.Imag);
+    }
+
+    // (a + bi) - (c + di) = (a - c) + (b - d)i
+    public ComplexNumber Subtract(ComplexNumber other)
+    {
+        return new ComplexNumber(Real - other.Real, Imag - other.Imag);
+    }
+
+    // (a + bi) * (c + di) = (ac - bd) + (ad + bc)i
+    public ComplexNumber Multiply(ComplexNumber other)
+    {
+        double real = Real * other.Real - Imag * other.Imag;
+        double imag = Real * other.Imag + Imag * other.Real;
+        return new ComplexNumber(real, imag);
+    }
+
+    public void Print()
+    {
+        if (Imag >= 0)
+            Console.WriteLine(Real + " + " + Imag + "i");
+        else
+            Console.WriteLine(Real + " - " + (-Imag) + "i");
+    }
+}
+
+// 5. Цвет RGB
+struct Color
+{
+    public int R;
+    public int G;
+    public int B;
+
+    public Color(int r, int g, int b)
+    {
+        R = r;
+        G = g;
+        B = b;
+    }
+
+    // возвращает строку вида #RRGGBB
+    public string ToHex()
+    {
+        // X2 - это 16-ричное число из двух символов
+        return "#" + R.ToString("X2") + G.ToString("X2") + B.ToString("X2");
+    }
+}
+
+// 6. Дата
+struct SimpleDate
+{
+    public int Day;
+    public int Month;
+    public int Year;
+
+    public SimpleDate(int day, int month, int year)
+    {
+        Day = day;
+        Month = month;
+        Year = year;
+    }
+
+    // год високосный, если делится на 4, но не на 100,
+    // или если делится на 400
+    public bool IsLeapYear()
+    {
+        if (Year % 400 == 0)
+            return true;
+        if (Year % 100 == 0)
+            return false;
+        if (Year % 4 == 0)
+            return true;
+        return false;
+    }
+}
+
+// ===== Уровень 3 =====
+
+// 7. Вектор в 2D
+struct Vector2D
+{
+    public double X;
+    public double Y;
+
+    public Vector2D(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    // длина вектора
+    public double Length()
+    {
+        return Math.Sqrt(X * X + Y * Y);
+    }
+
+    // нормализация - делим каждую координату на длину
+    public Vector2D Normalize()
+    {
+        double len = Length();
+        if (len == 0)
+            return new Vector2D(0, 0); // чтобы не делить на ноль
+        return new Vector2D(X / len, Y / len);
+    }
+
+    // скалярное произведение
+    public double Dot(Vector2D other)
+    {
+        return X * other.X + Y * other.Y;
+    }
+}
+
+// 8. Деньги
+struct Money
+{
+    public int Rubles;
+    public int Kopecks;
+
+    public Money(int rubles, int kopecks)
+    {
+        // если копеек 100 или больше - переводим в рубли
+        Rubles = rubles + kopecks / 100;
+        Kopecks = kopecks % 100;
+    }
+
+    // переводим всё в копейки, так считать проще
+    public int TotalKopecks()
+    {
+        return Rubles * 100 + Kopecks;
+    }
+
+    public Money Add(Money other)
+    {
+        int total = TotalKopecks() + other.TotalKopecks();
+        return new Money(0, total);
+    }
+
+    public Money Subtract(Money other)
+    {
+        int total = TotalKopecks() - other.TotalKopecks();
+        if (total < 0)
+        {
+            Console.WriteLine("Внимание: результат отрицательный, возвращаю 0");
+            total = 0;
+        }
+        return new Money(0, total);
+    }
+
+    // true, если эта сумма больше другой
+    public bool IsGreaterThan(Money other)
+    {
+        return TotalKopecks() > other.TotalKopecks();
+    }
+
+    // true, если эта сумма меньше другой
+    public bool IsLessThan(Money other)
+    {
+        return TotalKopecks() < other.TotalKopecks();
+    }
+
+    public void Print()
+    {
+        // D2 - всегда две цифры (5 копеек будет "05")
+        Console.WriteLine(Rubles + " руб. " + Kopecks.ToString("D2") + " коп.");
+    }
+}
+
+// 9. Треугольник (использует структуру Point)
+struct Triangle
+{
+    public Point A;
+    public Point B;
+    public Point C;
+
+    public Triangle(Point a, Point b, Point c)
+    {
+        A = a;
+        B = b;
+        C = c;
+    }
+
+    // длины сторон
+    public double SideAB()
+    {
+        return A.DistanceTo(B);
+    }
+
+    public double SideBC()
+    {
+        return B.DistanceTo(C);
+    }
+
+    public double SideCA()
+    {
+        return C.DistanceTo(A);
+    }
+
+    public double Perimeter()
+    {
+        return SideAB() + SideBC() + SideCA();
+    }
+
+    // формула Герона: S = sqrt(p * (p-a) * (p-b) * (p-c)), p - полупериметр
+    public double Area()
+    {
+        double a = SideAB();
+        double b = SideBC();
+        double c = SideCA();
+        double p = (a + b + c) / 2;
+        return Math.Sqrt(p * (p - a) * (p - b) * (p - c));
+    }
+}
+
+// 10. Точка в 3D
+struct Point3D
+{
+    public double X;
+    public double Y;
+    public double Z;
+
+    public Point3D(double x, double y, double z)
+    {
+        X = x;
+        Y = y;
+        Z = z;
+    }
+
+    public double DistanceTo(Point3D other)
+    {
+        double dx = other.X - X;
+        double dy = other.Y - Y;
+        double dz = other.Z - Z;
+        return Math.Sqrt(dx * dx + dy * dy + dz * dz);
+    }
+}
+
+// ===== Дополнительное =====
+
+// 11. Шахматная фигура
+struct ChessPiece
+{
+    public string Name;
+    public string Position;
+
+    public ChessPiece(string name, string position)
+    {
+        Name = name;
+        Position = position;
+    }
+
+    public void Move(string newPosition)
+    {
+        Console.WriteLine(Name + " ходит с " + Position + " на " + newPosition);
+        Position = newPosition;
+    }
+}
+
+// 12. GPS-координаты
+struct GeoPoint
+{
+    public double Latitude;
+    public double Longitude;
+
+    public GeoPoint(double latitude, double longitude)
+    {
+        Latitude = latitude;
+        Longitude = longitude;
+    }
+
+    // формула гаверсинусов, результат в километрах
+    public double DistanceTo(GeoPoint other)
+    {
+        double earthRadius = 6371; // радиус Земли в км
+
+        // переводим градусы в радианы
+        double lat1 = Latitude * Math.PI / 180;
+        double lat2 = other.Latitude * Math.PI / 180;
+        double dLat = (other.Latitude - Latitude) * Math.PI / 180;
+        double dLon = (other.Longitude - Longitude) * Math.PI / 180;
+
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                   Math.Cos(lat1) * Math.Cos(lat2) *
+                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+        return earthRadius * c;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.OutputEncoding = Encoding.UTF8;
+
+        // ---------- 1. Точка ----------
+        Console.WriteLine("--- 1. Точка на плоскости ---");
+        Point p1 = new Point(1, 2);
+        Point p2 = new Point(4, 6);
+        Console.WriteLine("Точка 1: (" + p1.X + ", " + p1.Y + ")");
+        Console.WriteLine("Точка 2: (" + p2.X + ", " + p2.Y + ")");
+        Console.WriteLine("Расстояние: " + p1.DistanceTo(p2));
+        Console.WriteLine();
+
+        // ---------- 2. Прямоугольник ----------
+        Console.WriteLine("--- 2. Прямоугольник ---");
+        Rectangle rect = new Rectangle(5, 3);
+        Console.WriteLine("Площадь: " + rect.Area());
+        Console.WriteLine("Периметр: " + rect.Perimeter());
+        Console.WriteLine();
+
+        // ---------- 3. Книга ----------
+        Console.WriteLine("--- 3. Книга ---");
+        Book book = new Book("Война и мир", "Лев Толстой", 1869);
+        book.Print();
+        Console.WriteLine();
+
+        // ---------- 4. Комплексное число ----------
+        Console.WriteLine("--- 4. Комплексные числа ---");
+        ComplexNumber c1 = new ComplexNumber(2, 3);
+        ComplexNumber c2 = new ComplexNumber(1, -4);
+        Console.Write("Сложение: ");
+        c1.Add(c2).Print();
+        Console.Write("Вычитание: ");
+        c1.Subtract(c2).Print();
+        Console.Write("Умножение: ");
+        c1.Multiply(c2).Print();
+        Console.WriteLine();
+
+        // ---------- 5. Цвет ----------
+        Console.WriteLine("--- 5. Цвет RGB ---");
+        Color color = new Color(255, 128, 0);
+        Console.WriteLine("Цвет в HEX: " + color.ToHex());
+        Console.WriteLine();
+
+        // ---------- 6. Дата ----------
+        Console.WriteLine("--- 6. Дата ---");
+        SimpleDate date1 = new SimpleDate(1, 1, 2024);
+        SimpleDate date2 = new SimpleDate(1, 1, 2025);
+        Console.WriteLine("2024 високосный? " + date1.IsLeapYear());
+        Console.WriteLine("2025 високосный? " + date2.IsLeapYear());
+        Console.WriteLine();
+
+        // ---------- 7. Вектор ----------
+        Console.WriteLine("--- 7. Вектор в 2D ---");
+        Vector2D v1 = new Vector2D(3, 4);
+        Vector2D v2 = new Vector2D(1, 2);
+        Console.WriteLine("Длина v1: " + v1.Length());
+        Vector2D norm = v1.Normalize();
+        Console.WriteLine("Нормализованный v1: (" + norm.X + ", " + norm.Y + ")");
+        Console.WriteLine("Скалярное произведение: " + v1.Dot(v2));
+        Console.WriteLine();
+
+        // ---------- 8. Деньги ----------
+        Console.WriteLine("--- 8. Деньги ---");
+        Money m1 = new Money(10, 50);
+        Money m2 = new Money(5, 75);
+        Console.Write("Сумма: ");
+        m1.Add(m2).Print();
+        Console.Write("Разность: ");
+        m1.Subtract(m2).Print();
+        Console.WriteLine("m1 больше m2? " + m1.IsGreaterThan(m2));
+        Console.WriteLine("m1 меньше m2? " + m1.IsLessThan(m2));
+        Console.WriteLine();
+
+        // ---------- 9. Треугольник ----------
+        Console.WriteLine("--- 9. Треугольник ---");
+        Triangle tr = new Triangle(new Point(0, 0), new Point(4, 0), new Point(0, 3));
+        Console.WriteLine("Сторона AB: " + tr.SideAB());
+        Console.WriteLine("Сторона BC: " + tr.SideBC());
+        Console.WriteLine("Сторона CA: " + tr.SideCA());
+        Console.WriteLine("Периметр: " + tr.Perimeter());
+        Console.WriteLine("Площадь: " + tr.Area());
+        Console.WriteLine();
+
+        // ---------- 10. 3D ----------
+        Console.WriteLine("--- 10. 3D-геометрия ---");
+        Point3D a3 = new Point3D(1, 2, 3);
+        Point3D b3 = new Point3D(4, 6, 8);
+        Console.WriteLine("Расстояние в 3D: " + a3.DistanceTo(b3));
+        Console.WriteLine();
+
+        // ---------- 11. Шахматы ----------
+        Console.WriteLine("--- 11. Шахматная фигура ---");
+        ChessPiece knight = new ChessPiece("Конь", "G1");
+        knight.Move("F3");
+        Console.WriteLine("Теперь конь на: " + knight.Position);
+        Console.WriteLine();
+
+        // ---------- 12. GPS ----------
+        Console.WriteLine("--- 12. GPS-координаты ---");
+        GeoPoint moscow = new GeoPoint(55.7558, 37.6173);
+        GeoPoint vladivostok = new GeoPoint(43.1155, 131.8855);
+        double km = moscow.DistanceTo(vladivostok);
+        Console.WriteLine("Москва - Владивосток: " + Math.Round(km, 1) + " км");
+    }
+}
