@@ -1,0 +1,264 @@
+using System;
+
+struct Point
+{
+    public double X, Y;
+
+    public double Distance(Point p)
+    {
+        return Math.Sqrt((X - p.X) * (X - p.X) + (Y - p.Y) * (Y - p.Y));
+    }
+}
+
+struct Rectangle
+{
+    public double Width, Height;
+
+    public double Area()
+    {
+        return Width * Height;
+    }
+
+    public double Perimeter()
+    {
+        return 2 * (Width + Height);
+    }
+}
+
+struct Book
+{
+    public string Title, Author;
+    public int Year;
+}
+
+struct ComplexNumber
+{
+    public double Real, Imag;
+
+    public ComplexNumber Add(ComplexNumber c)
+    {
+        return new ComplexNumber { Real = Real + c.Real, Imag = Imag + c.Imag };
+    }
+
+    public ComplexNumber Subtract(ComplexNumber c)
+    {
+        return new ComplexNumber { Real = Real - c.Real, Imag = Imag - c.Imag };
+    }
+
+    public ComplexNumber Multiply(ComplexNumber c)
+    {
+        return new ComplexNumber
+        {
+            Real = Real * c.Real - Imag * c.Imag,
+            Imag = Real * c.Imag + Imag * c.Real
+        };
+    }
+}
+
+struct Color
+{
+    public int R, G, B;
+
+    public string ToHex()
+    {
+        return "#" + R.ToString("X2") + G.ToString("X2") + B.ToString("X2");
+    }
+}
+
+struct SimpleDate
+{
+    public int Day, Month, Year;
+
+    public bool IsLeapYear()
+    {
+        return Year % 400 == 0 || (Year % 4 == 0 && Year % 100 != 0);
+    }
+}
+
+struct Vector2D
+{
+    public double X, Y;
+
+    public double Length()
+    {
+        return Math.Sqrt(X * X + Y * Y);
+    }
+
+    public Vector2D Normalize()
+    {
+        double len = Length();
+        return new Vector2D { X = X / len, Y = Y / len };
+    }
+
+    public double Dot(Vector2D v)
+    {
+        return X * v.X + Y * v.Y;
+    }
+}
+
+struct Money
+{
+    public int Rubles, Kopecks;
+
+    public int Total()
+    {
+        return Rubles * 100 + Kopecks;
+    }
+
+    public Money Add(Money m)
+    {
+        int t = Total() + m.Total();
+        return new Money { Rubles = t / 100, Kopecks = t % 100 };
+    }
+
+    public Money Subtract(Money m)
+    {
+        int t = Total() - m.Total();
+        return new Money { Rubles = t / 100, Kopecks = t % 100 };
+    }
+
+    public bool IsGreater(Money m)
+    {
+        return Total() > m.Total();
+    }
+
+    public bool IsLess(Money m)
+    {
+        return Total() < m.Total();
+    }
+}
+
+struct Triangle
+{
+    public Point A, B, C;
+
+    public double SideAB()
+    {
+        return A.Distance(B);
+    }
+
+    public double SideBC()
+    {
+        return B.Distance(C);
+    }
+
+    public double SideCA()
+    {
+        return C.Distance(A);
+    }
+
+    public double Perimeter()
+    {
+        return SideAB() + SideBC() + SideCA();
+    }
+
+    public double Area()
+    {
+        double p = Perimeter() / 2;
+        return Math.Sqrt(p * (p - SideAB()) * (p - SideBC()) * (p - SideCA()));
+    }
+}
+
+struct Point3D
+{
+    public double X, Y, Z;
+
+    public double Distance(Point3D p)
+    {
+        return Math.Sqrt((X - p.X) * (X - p.X) + (Y - p.Y) * (Y - p.Y) + (Z - p.Z) * (Z - p.Z));
+    }
+}
+
+struct ChessPiece
+{
+    public string Name, Position;
+
+    public void Move(string newPosition)
+    {
+        Position = newPosition;
+    }
+}
+
+struct GeoPoint
+{
+    public double Latitude, Longitude;
+
+    public double Distance(GeoPoint g)
+    {
+        double lat1 = Latitude * Math.PI / 180;
+        double lat2 = g.Latitude * Math.PI / 180;
+        double dLat = lat2 - lat1;
+        double dLon = (g.Longitude - Longitude) * Math.PI / 180;
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                   Math.Cos(lat1) * Math.Cos(lat2) * Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        return 6371 * 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Point p1 = new Point { X = 1, Y = 2 };
+        Point p2 = new Point { X = 4, Y = 6 };
+        Console.WriteLine("Точка 1: " + p1.X + " " + p1.Y);
+        Console.WriteLine("Точка 2: " + p2.X + " " + p2.Y);
+        Console.WriteLine("Расстояние: " + p1.Distance(p2));
+
+        Rectangle r = new Rectangle { Width = 5, Height = 3 };
+        Console.WriteLine("Площадь: " + r.Area() + ", периметр: " + r.Perimeter());
+
+        Book b = new Book { Title = "Война и мир", Author = "Толстой", Year = 1869 };
+        Console.WriteLine(b.Title + " — " + b.Author + " (" + b.Year + ")");
+
+        ComplexNumber c1 = new ComplexNumber { Real = 2, Imag = 3 };
+        ComplexNumber c2 = new ComplexNumber { Real = 1, Imag = -4 };
+        ComplexNumber sum = c1.Add(c2);
+        ComplexNumber diff = c1.Subtract(c2);
+        ComplexNumber mul = c1.Multiply(c2);
+        Console.WriteLine("Сумма: " + sum.Real + " + " + sum.Imag + "i");
+        Console.WriteLine("Разность: " + diff.Real + " + " + diff.Imag + "i");
+        Console.WriteLine("Произведение: " + mul.Real + " + " + mul.Imag + "i");
+
+        Color color = new Color { R = 255, G = 128, B = 0 };
+        Console.WriteLine(color.ToHex());
+
+        SimpleDate d = new SimpleDate { Day = 1, Month = 1, Year = 2024 };
+        Console.WriteLine("Високосный: " + d.IsLeapYear());
+
+        Vector2D v1 = new Vector2D { X = 3, Y = 4 };
+        Vector2D v2 = new Vector2D { X = 1, Y = 2 };
+        Vector2D n = v1.Normalize();
+        Console.WriteLine("Длина: " + v1.Length());
+        Console.WriteLine("Нормализация: " + n.X + " " + n.Y);
+        Console.WriteLine("Скалярное: " + v1.Dot(v2));
+
+        Money m1 = new Money { Rubles = 10, Kopecks = 75 };
+        Money m2 = new Money { Rubles = 5, Kopecks = 50 };
+        Money ms = m1.Add(m2);
+        Money md = m1.Subtract(m2);
+        Console.WriteLine("Сумма: " + ms.Rubles + " руб. " + ms.Kopecks + " коп.");
+        Console.WriteLine("Разность: " + md.Rubles + " руб. " + md.Kopecks + " коп.");
+        Console.WriteLine("Первая больше: " + m1.IsGreater(m2));
+        Console.WriteLine("Первая меньше: " + m1.IsLess(m2));
+
+        Triangle t = new Triangle();
+        t.A = new Point { X = 0, Y = 0 };
+        t.B = new Point { X = 4, Y = 0 };
+        t.C = new Point { X = 0, Y = 3 };
+        Console.WriteLine("Стороны: " + t.SideAB() + " " + t.SideBC() + " " + t.SideCA());
+        Console.WriteLine("Периметр: " + t.Perimeter() + ", площадь: " + t.Area());
+
+        Point3D a3 = new Point3D { X = 1, Y = 2, Z = 3 };
+        Point3D b3 = new Point3D { X = 4, Y = 6, Z = 8 };
+        Console.WriteLine("Расстояние 3D: " + a3.Distance(b3));
+
+        ChessPiece piece = new ChessPiece { Name = "Конь", Position = "E4" };
+        piece.Move("F6");
+        Console.WriteLine(piece.Name + " на " + piece.Position);
+
+        GeoPoint g1 = new GeoPoint { Latitude = 55.7558, Longitude = 37.6173 };
+        GeoPoint g2 = new GeoPoint { Latitude = 59.9343, Longitude = 30.3351 };
+        Console.WriteLine("Расстояние: " + g1.Distance(g2) + " км");
+    }
+}
