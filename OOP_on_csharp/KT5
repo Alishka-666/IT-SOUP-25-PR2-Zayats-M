@@ -1,6 +1,6 @@
 using System;
 
-namespace GenericsDemo
+namespace 322
 {
     public class Box<T> where T : notnull
     {
