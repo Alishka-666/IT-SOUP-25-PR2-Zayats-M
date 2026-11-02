@@ -1,0 +1,71 @@
+using System;
+
+namespace GenericsDemo
+{
+    public class Box<T> where T : notnull
+    {
+        private T _item = default!;
+
+        public void Put(T item)
+        {
+            _item = item;
+        }
+
+        public T Get()
+        {
+            return _item;
+        }
+    }
+
+    public static class Utils
+    {
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
+        }
+    }
+
+    public class Pair<TFirst, TSecond>
+        where TFirst : notnull
+        where TSecond : notnull
+    {
+        public TFirst First { get; }
+        public TSecond Second { get; }
+
+        public Pair(TFirst first, TSecond second)
+        {
+            First = first;
+            Second = second;
+        }
+    }
+
+    internal class Program
+    {
+        private static void Main()
+        {
+            Box<int> intBox = new Box<int>();
+            intBox.Put(42);
+
+            Box<string> stringBox = new Box<string>();
+            stringBox.Put("Hello");
+
+            Console.WriteLine($"Число в коробке: {intBox.Get()}");
+            Console.WriteLine($"Строка в коробке: {stringBox.Get()}");
+            Console.WriteLine();
+
+            int x = 5, y = 10;
+            Utils.Swap(ref x, ref y);
+            Console.WriteLine($"Числа после Swap: {x}, {y}");
+
+            string s1 = "Hello", s2 = "World";
+            Utils.Swap(ref s1, ref s2);
+            Console.WriteLine($"Строки после Swap: {s1}, {s2}");
+            Console.WriteLine();
+
+            Pair<int, string> pair = new Pair<int, string>(5, "Hello");
+            Console.WriteLine($"Первое значение: {pair.First}, Второе значение: {pair.Second}");
+        }
+    }
+}
